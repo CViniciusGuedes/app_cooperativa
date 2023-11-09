@@ -19,28 +19,6 @@ class DatabaseHelper {
 
   Future<Database> init() async {
     return await openDatabase(join(await getDatabasesPath(), 'app_cooperativa.db'), version: 1, onCreate: (Database db, int version) async {
-      await db.execute('CREATE TABLE Cadastro ('
-          'id TEXT PRIMARY KEY,'
-          'nome TEXT,'
-          'cpf TEXT,'
-          'email TEXT,'
-          'celular TEXT,'
-          'cep TEXT,'
-          'estado TEXT,'
-          'cidade TEXT,'
-          'rua TEXT,'
-          'numero TEXT,'
-          'bairro TEXT'
-          ')');
-
-      await db.execute('CREATE TABLE Producao ('
-          'id TEXT PRIMARY KEY,'
-          'produto TEXT,'
-          'descricao TEXT,'
-          'preco TEXT,'
-          'tipo TEXT'
-          ')');
-
       await db.execute('CREATE TABLE Propriedade ('
           'id TEXT PRIMARY KEY,'
           'nome TEXT,'
@@ -48,8 +26,31 @@ class DatabaseHelper {
           'bairro TEXT,'
           'cidade TEXT,'
           'uf TEXT,'
-          'area TEXT'
+          'area TEXT,'
+          'tipoSolo TEXT'
           ')');
     });
   }
 }
+
+ // await db.execute('CREATE TABLE Usuario ('
+      //     'id TEXT PRIMARY KEY,'
+      //     'nome TEXT,'
+      //     'cpf TEXT,'
+      //     'email TEXT,'
+      //     'celular TEXT,'
+      //     'cep TEXT,'
+      //     'estado TEXT,'
+      //     'cidade TEXT,'
+      //     'logradouro TEXT,'
+      //     'numero TEXT,'
+      //     'bairro TEXT'
+      //     ')');
+
+      // await db.execute('CREATE TABLE Producao ('
+      //     'id TEXT PRIMARY KEY,'
+      //     'produto TEXT,'
+      //     'descricao TEXT,'
+      //     'preco TEXT,'
+      //     'tipo TEXT'
+      //     ')');

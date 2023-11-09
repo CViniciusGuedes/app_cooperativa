@@ -1,4 +1,6 @@
+import 'package:app_cooperativa/formularios/usuario_cadastro.dart';
 import 'package:app_cooperativa/screens/home_screen.dart';
+import 'package:app_cooperativa/screens/propriedade_list.dart';
 import 'package:app_cooperativa/widgets/painel_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,8 @@ class MyApp extends StatelessWidget {
       ),
       home: HomeScreen(),
       // home: PainelWidget(),
+      // home: CadastroUsuario(),
+      // home: PropriedadeList(),
     );
   }
 }

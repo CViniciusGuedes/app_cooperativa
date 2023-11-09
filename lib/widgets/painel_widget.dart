@@ -1,3 +1,5 @@
+import 'package:app_cooperativa/formularios/usuario_cadastro.dart';
+import 'package:app_cooperativa/screens/propriedade_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -58,7 +60,14 @@ class _PainelWidgetState extends State<PainelWidget> {
             SizedBox(
               height: 150,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PropriedadeList(),
+                    ),
+                  );
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -93,7 +102,16 @@ class _PainelWidgetState extends State<PainelWidget> {
             SizedBox(
               height: 150,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CadastroUsuario(
+                        id: '',
+                      ),
+                    ),
+                  );
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
