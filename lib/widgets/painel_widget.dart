@@ -2,6 +2,7 @@ import 'package:app_cooperativa/formularios/usuario_cadastro.dart';
 import 'package:app_cooperativa/screens/propriedade_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PainelWidget extends StatefulWidget {
   const PainelWidget({super.key});
@@ -34,16 +35,16 @@ class _PainelWidgetState extends State<PainelWidget> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 25),
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 20.0),
-                          child: Icon(
-                            Icons.grain,
-                            color: Colors.green,
-                            size: 35,
+                          child: SvgPicture.asset(
+                            'assets/images/soy.svg',
+                            width: 45,
+                            colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
                           ),
                         ),
                       ),
@@ -76,21 +77,21 @@ class _PainelWidgetState extends State<PainelWidget> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 25),
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
-                          child: Icon(
-                            Icons.house,
-                            color: Colors.green,
-                            size: 35,
+                          child: SvgPicture.asset(
+                            'assets/images/farm.svg',
+                            width: 40,
+                            colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
                           ),
                         ),
                       ),
                       Text(
-                        'Gerenciar Propriedade',
+                        'Gerenciar Propriedades',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
@@ -120,21 +121,21 @@ class _PainelWidgetState extends State<PainelWidget> {
                     ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Column(
+                  child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.only(top: 25),
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 20.0),
-                          child: Icon(
-                            Icons.person,
-                            color: Colors.green,
-                            size: 35,
+                          child: SvgPicture.asset(
+                            'assets/images/farmer.svg',
+                            width: 40,
+                            colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
                           ),
                         ),
                       ),
                       Text(
-                        'Perfil',
+                        'Cooperados',
                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
