@@ -31,18 +31,18 @@ class _CooperadoListState extends State<CooperadoList> {
 
   void _loadCooperados() async {
     final List<Cooperado> cachedCooperados = [
-      Cooperado(
-        nome: 'Carlos Guedes',
-        cpf: '11122233344',
-        email: 'carlos@gmail.com',
-        celular: '18996818637',
-        cep: '19822108',
-        estado: 'SP',
-        cidade: 'Taruma',
-        logradouro: 'Jatoba',
-        numero: '109',
-        bairro: 'Arvores',
-      ),
+      // Cooperado(
+      //   nome: 'Carlos Guedes',
+      //   cpf: '11122233344',
+      //   email: 'carlos@gmail.com',
+      //   celular: '18996818637',
+      //   cep: '19822108',
+      //   estado: 'SP',
+      //   cidade: 'Taruma',
+      //   logradouro: 'Jatoba',
+      //   numero: '109',
+      //   bairro: 'Arvores',
+      // ),
     ];
 
     await CooperadoRepository(DatabaseHelper.instance).addAll(cachedCooperados);
