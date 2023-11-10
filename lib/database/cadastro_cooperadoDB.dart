@@ -3,7 +3,7 @@ import 'package:app_cooperativa/database/uuid_utils.dart';
 
 const uuid = Uuid();
 
-class Usuario {
+class Cooperado {
   final String? id;
   final String nome;
   final String cpf;
@@ -16,7 +16,7 @@ class Usuario {
   final String numero;
   final String bairro;
 
-  Usuario({
+  Cooperado({
     String? id,
     required this.nome,
     required this.cpf,
@@ -30,7 +30,7 @@ class Usuario {
     required this.bairro,
   }) : id = id ?? UuidUtils.simplify(uuid.v4());
 
-  factory Usuario.fromMap(Map<String, dynamic> record) => Usuario(
+  factory Cooperado.fromMap(Map<String, dynamic> record) => Cooperado(
         id: record['id'],
         nome: record['nome'],
         cpf: record['cpf'],

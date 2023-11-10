@@ -1,15 +1,18 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
-import 'package:app_cooperativa/database/cadastro_usuarioDB.dart';
-import 'package:app_cooperativa/database/cadastro_usuario_repository.dart';
+import 'package:app_cooperativa/database/cadastro_cooperadoDB.dart';
+import 'package:app_cooperativa/database/cadastro_cooperado_repository.dart';
 import 'package:app_cooperativa/database/database_helper.dart';
+import 'package:app_cooperativa/screens/propriedade_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-class CadastroUsuario extends StatefulWidget {
-  const CadastroUsuario({
+const String LOGGER_NAME = 'mobile.coop';
+
+class CadastroCooperado extends StatefulWidget {
+  const CadastroCooperado({
     super.key,
     required this.id,
   }) : update = id != null;
@@ -18,10 +21,10 @@ class CadastroUsuario extends StatefulWidget {
   final bool update;
 
   @override
-  State<CadastroUsuario> createState() => _CadastroUsuarioState();
+  State<CadastroCooperado> createState() => _CadastroCooperadoState();
 }
 
-class _CadastroUsuarioState extends State<CadastroUsuario> {
+class _CadastroCooperadoState extends State<CadastroCooperado> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController idController = TextEditingController();
@@ -36,7 +39,7 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
   TextEditingController numeroController = TextEditingController();
   TextEditingController bairroController = TextEditingController();
 
-  Usuario _getFormData() {
+  Cooperado _getFormData() {
     final String id = idController.text;
     final String nome = nameController.text;
     final String cpf = cpfController.text;
@@ -49,7 +52,7 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
     final String numero = numeroController.text;
     final String bairro = bairroController.text;
 
-    return Usuario(
+    return Cooperado(
       id: id == '' ? null : id,
       nome: nome,
       cpf: cpf,
@@ -64,29 +67,30 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
     );
   }
 
-  Future<Usuario> _saveUsuario(Usuario usuario) async {
-    await UsuarioRepository(DatabaseHelper.instance).add(usuario);
-    return usuario;
+  Future<Cooperado> _saveCooperado(Cooperado cooperado) async {
+    await CooperadoRepository(DatabaseHelper.instance).add(cooperado);
+    return cooperado;
   }
 
-  void _loadUsuario(String? id) async {
+  void _loadCooperado(String? id) async {
     if (id == null) {
       return;
     }
-    Usuario? usuario = await UsuarioRepository(DatabaseHelper.instance).findById(id);
+    Cooperado? cooperado =
+        await CooperadoRepository(DatabaseHelper.instance).findById(id);
 
-    if (usuario != null) {
-      idController.text = usuario.id!;
-      nameController.text = usuario.nome;
-      cpfController.text = usuario.cpf;
-      emailController.text = usuario.email;
-      phoneController.text = usuario.celular;
-      cepController.text = usuario.cep;
-      estadoController.text = usuario.estado;
-      cidadeController.text = usuario.cidade;
-      logradouroController.text = usuario.logradouro;
-      numeroController.text = usuario.numero;
-      bairroController.text = usuario.bairro;
+    if (cooperado != null) {
+      idController.text = cooperado.id!;
+      nameController.text = cooperado.nome;
+      cpfController.text = cooperado.cpf;
+      emailController.text = cooperado.email;
+      phoneController.text = cooperado.celular;
+      cepController.text = cooperado.cep;
+      estadoController.text = cooperado.estado;
+      cidadeController.text = cooperado.cidade;
+      logradouroController.text = cooperado.logradouro;
+      numeroController.text = cooperado.numero;
+      bairroController.text = cooperado.bairro;
     }
   }
 
@@ -124,13 +128,14 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
 
   @override
   Widget build(BuildContext context) {
+    _loadCooperado(widget.id);
     return Form(
       key: _formKey,
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            'Cadastro de Usuário',
+            'Cadastro de Cooperado',
             style: TextStyle(color: Colors.white),
           ),
           iconTheme: IconThemeData(color: Colors.white),
@@ -189,7 +194,8 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
                           ),
                         ],
                         validator: (text) {
-                          final exp = RegExp(r"(\d{3})+\.?(\d{3})+\.?(\d{3})+-?([\dxX]{1,2})+");
+                          final exp = RegExp(
+                              r"(\d{3})+\.?(\d{3})+\.?(\d{3})+-?([\dxX]{1,2})+");
                           if (!exp.hasMatch(text ?? '')) {
                             return 'CPF Inválido';
                           }
@@ -209,7 +215,8 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
                       child: TextFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (text) {
-                          final exp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                          final exp = RegExp(
+                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                           if (!exp.hasMatch(text ?? '')) {
                             return 'E-mail Inválido';
                           }
@@ -236,7 +243,8 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
                           ),
                         ],
                         validator: (text) {
-                          final exp = RegExp(r"^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$");
+                          final exp = RegExp(
+                              r"^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$");
                           if (!exp.hasMatch(text ?? '')) {
                             return 'Telefone Inválido';
                           }
@@ -375,15 +383,16 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
                     ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStatePropertyAll(Colors.green),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
                         ),
                       ),
                       onPressed: () async {
-                        final Usuario usuario = _getFormData();
-                        await _saveUsuario(usuario);
+                        final Cooperado cooperado = _getFormData();
+                        await _saveCooperado(cooperado);
                         dev.log('${widget.update}');
 
                         if (widget.update) {
@@ -392,7 +401,7 @@ class _CadastroUsuarioState extends State<CadastroUsuario> {
                           //snackbar
                         }
 
-                        dev.log('$usuario', name: '');
+                        dev.log('$cooperado', name: LOGGER_NAME);
                         Navigator.of(context).pop();
                       },
                       child: const Text(

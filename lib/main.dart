@@ -1,4 +1,4 @@
-import 'package:app_cooperativa/formularios/usuario_cadastro.dart';
+import 'package:app_cooperativa/formularios/cooperado_cadastro.dart';
 import 'package:app_cooperativa/screens/home_screen.dart';
 import 'package:app_cooperativa/screens/propriedade_list.dart';
 import 'package:app_cooperativa/widgets/painel_widget.dart';

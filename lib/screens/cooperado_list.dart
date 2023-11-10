@@ -1,77 +1,59 @@
-import 'dart:developer' as dev;
+import 'package:app_cooperativa/database/cadastro_cooperadoDB.dart';
+import 'package:app_cooperativa/database/cadastro_cooperado_repository.dart';
 import 'package:app_cooperativa/database/database_helper.dart';
-import 'package:app_cooperativa/database/propriedade_repository.dart';
-import 'package:app_cooperativa/formularios/nova_propriedade.dart';
+import 'package:app_cooperativa/formularios/cooperado_cadastro.dart';
 import 'package:app_cooperativa/widgets/alert_dialog.dart';
 import 'package:app_cooperativa/widgets/snackbar_notification.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../database/propriedadeDB.dart';
+import 'dart:developer' as dev;
 
 const String LOGGER_NAME = 'mobile.coop';
 
-class PropriedadeList extends StatefulWidget {
-  const PropriedadeList({super.key});
+class CooperadoList extends StatefulWidget {
+  const CooperadoList({super.key});
 
   @override
-  State<PropriedadeList> createState() => _PropriedadeListState();
+  State<CooperadoList> createState() => _CooperadoListState();
 }
 
-class _PropriedadeListState extends State<PropriedadeList> {
-  List<Propriedade> _propriedade = [];
-  bool _propriedadesCarregados = false;
+class _CooperadoListState extends State<CooperadoList> {
+  List<Cooperado> _cooperado = [];
+  bool _cooperadosCarregados = false;
 
   @override
   void initState() {
     super.initState();
-    if (!_propriedadesCarregados) {
-      _loadPropriedades();
-      _propriedadesCarregados = true;
+    if (!_cooperadosCarregados) {
+      _loadCooperados();
+      _cooperadosCarregados = true;
     }
   }
 
-  void _loadPropriedades() async {
-    final List<Propriedade> cachedPropriedades = [
-      // Propriedade(
-      //   nome: 'Fazenda Guedes',
-      //   endereco: 'Estrada Vicinal 400',
-      //   bairro: 'Bairro Dourados',
-      //   cidade: 'Tarumã',
-      //   uf: 'SP',
-      //   area: '4.000²',
-      //   tipoSolo: 'Arenoso',
-      // ),
-      // Propriedade(
-      //   nome: 'Fazenda Nova America',
-      //   endereco: 'Estrada Vicinal 300',
-      //   bairro: 'Aguá da Aldeia',
-      //   cidade: 'Tarumã',
-      //   uf: 'SP',
-      //   area: '5.000²',
-      //   tipoSolo: 'Terra Roxa',
-      // ),
-      // Propriedade(
-      //   nome: 'Sitio Moreira',
-      //   endereco: 'Estrada Maracaí',
-      //   bairro: 'Anhumas',
-      //   cidade: 'Maracaí',
-      //   uf: 'SP',
-      //   area: '8.000²',
-      //   tipoSolo: 'Solo Arenoso',
-      // )
+  void _loadCooperados() async {
+    final List<Cooperado> cachedCooperados = [
+      Cooperado(
+        nome: 'Carlos Guedes',
+        cpf: '11122233344',
+        email: 'carlos@gmail.com',
+        celular: '18996818637',
+        cep: '19822108',
+        estado: 'SP',
+        cidade: 'Taruma',
+        logradouro: 'Jatoba',
+        numero: '109',
+        bairro: 'Arvores',
+      ),
     ];
 
-    await PropriedadeRepository(DatabaseHelper.instance)
-        .addAll(cachedPropriedades);
-    _refreshPropriedades();
+    await CooperadoRepository(DatabaseHelper.instance).addAll(cachedCooperados);
+    _refreshCooperados();
   }
 
-  void _refreshPropriedades() async {
-    final List<Propriedade> propriedades =
-        await PropriedadeRepository(DatabaseHelper.instance).findAll();
-
+  void _refreshCooperados() async {
+    final List<Cooperado> cooperados =
+        await CooperadoRepository(DatabaseHelper.instance).findAll();
     setState(() {
-      _propriedade = propriedades;
+      _cooperado = cooperados;
       dev.log('');
     });
   }
@@ -80,41 +62,52 @@ class _PropriedadeListState extends State<PropriedadeList> {
     Navigator.of(context)
         .push(
           MaterialPageRoute(
-            builder: (context) => NovaPropriedade(
+            builder: (context) => CadastroCooperado(
               id: id,
             ),
           ),
         )
-        .then((_) => _refreshPropriedades());
+        .then((_) => _refreshCooperados());
   }
+
+  // void _editById(String id) async {
+  //   Navigator.of(context)
+  //       .push(
+  //         MaterialPageRoute(
+  //           builder: (context) => CadastroCooperado(
+  //             id: id,
+  //           ),
+  //         ),
+  //       )
+  //       .then((_) => _refreshCooperados());
+  // }
 
   void _deleteById(String id) async {
     AlertDialogWidget.show(
       context,
       'Atenção',
-      'Confirma Exclusão da Propriedade?',
+      'Confirma Exclusão do Cooperado?',
       onConfirm: () async {
-        dev.log('Remoção de Propriedade Confirmada');
+        dev.log('Remoção de Cooperado Confirmada');
 
-        await PropriedadeRepository(DatabaseHelper.instance).deleteById(id);
+        await CooperadoRepository(DatabaseHelper.instance).deleteById(id);
 
         SnackbarNotificationWidget.error(
-            context, 'Ok', 'Propriedade removida com sucesso!');
+            context, 'Ok', 'Cooperado removido com sucesso!');
 
-        _refreshPropriedades();
+        _refreshCooperados();
       },
       onCancel: () async {
-        dev.log('Remoção de Propriedade Cancelada');
+        dev.log('Remoção de Cooperado Cancelada');
       },
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Lista de Propriedades',
+          'Lista de Cooperados',
           style: TextStyle(
             color: Colors.white,
             // fontWeight: FontWeight.bold,
@@ -127,8 +120,8 @@ class _PropriedadeListState extends State<PropriedadeList> {
           IconButton(
             onPressed: () {
               dev.log('actions.refresh', name: '');
-              _loadPropriedades();
-              _refreshPropriedades();
+              _loadCooperados();
+              _refreshCooperados();
             },
             icon: const Icon(Icons.refresh),
           ),
@@ -137,11 +130,11 @@ class _PropriedadeListState extends State<PropriedadeList> {
               dev.log('actions.add', name: '');
               Navigator.of(context)
                   .push(MaterialPageRoute(
-                      builder: (context) => NovaPropriedade(
+                      builder: (context) => CadastroCooperado(
                             id: null,
                           )))
                   .then(
-                    (_) => _refreshPropriedades(),
+                    (_) => _refreshCooperados(),
                   );
             },
             icon: const Icon(Icons.add),
@@ -149,12 +142,12 @@ class _PropriedadeListState extends State<PropriedadeList> {
         ],
       ),
       body: GridView.builder(
-          itemCount: _propriedade.length,
+          itemCount: _cooperado.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 1,
             mainAxisSpacing: 8,
             crossAxisSpacing: 8,
-            childAspectRatio: 300 / 240,
+            childAspectRatio: 300 / 310,
           ),
           itemBuilder: (context, i) {
             return GestureDetector(
@@ -169,7 +162,7 @@ class _PropriedadeListState extends State<PropriedadeList> {
                         width: 180,
                         decoration: BoxDecoration(
                           image: const DecorationImage(
-                              image: AssetImage('assets/images/fazenda.jpg'),
+                              image: AssetImage('assets/images/agricultor.jpg'),
                               fit: BoxFit.cover),
                           borderRadius: BorderRadius.circular(6),
                         ),
@@ -193,7 +186,7 @@ class _PropriedadeListState extends State<PropriedadeList> {
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].nome,
+                                  _cooperado[i].nome,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -210,14 +203,14 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Endereço: ',
+                                  'CPF: ',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].endereco,
+                                  _cooperado[i].cpf,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -234,14 +227,86 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Bairro: ',
+                                  'E-mail: ',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].bairro,
+                                  _cooperado[i].email,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'Celular: ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _cooperado[i].celular,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'CEP: ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _cooperado[i].cep,
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                const Text(
+                                  'Estado: ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  _cooperado[i].estado,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -265,7 +330,7 @@ class _PropriedadeListState extends State<PropriedadeList> {
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].cidade,
+                                  _cooperado[i].cidade,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -282,14 +347,14 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'UF: ',
+                                  'Logradouro: ',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].uf,
+                                  _cooperado[i].logradouro,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -306,14 +371,14 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Area: ',
+                                  'Número: ',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].area,
+                                  _cooperado[i].numero,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -330,14 +395,14 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Tipo Solo: ',
+                                  'Bairro: ',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
-                                  _propriedade[i].tipoSolo,
+                                  _cooperado[i].bairro,
                                   style: const TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.normal,
@@ -347,29 +412,28 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             ),
                           ),
                         ),
-                        const Divider(),
+                        Divider(),
                         SizedBox(
                           width: 96,
                           child: Row(
                             children: [
                               IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () async {
                                   dev.log('actions.trash', name: LOGGER_NAME);
-                                  await PropriedadeRepository(
+                                  await CooperadoRepository(
                                           DatabaseHelper.instance)
-                                      .deleteById(_propriedade[i].id!);
-                                  _refreshPropriedades();
+                                      .deleteById(_cooperado[i].id!);
+                                  _refreshCooperados();
                                 },
+                                icon: Icon(Icons.delete, color: Colors.red),
                               ),
                               IconButton(
-                                onPressed: () => _editById(_propriedade[i].id!),
-                                icon: const Icon(Icons.edit),
+                                onPressed: () => _editById(_cooperado[i].id!),
+                                icon: Icon(Icons.edit),
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ],

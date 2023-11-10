@@ -18,7 +18,9 @@ class DatabaseHelper {
   }
 
   Future<Database> init() async {
-    return await openDatabase(join(await getDatabasesPath(), 'app_cooperativa.db'), version: 1, onCreate: (Database db, int version) async {
+    return await openDatabase(
+        join(await getDatabasesPath(), 'app_cooperativa.db'),
+        version: 1, onCreate: (Database db, int version) async {
       await db.execute('CREATE TABLE Propriedade ('
           'id TEXT PRIMARY KEY,'
           'nome TEXT,'
@@ -29,24 +31,23 @@ class DatabaseHelper {
           'area TEXT,'
           'tipoSolo TEXT'
           ')');
+
+      await db.execute('CREATE TABLE Cooperado ('
+          'id TEXT PRIMARY KEY,'
+          'nome TEXT,'
+          'cpf TEXT,'
+          'email TEXT,'
+          'celular TEXT,'
+          'cep TEXT,'
+          'estado TEXT,'
+          'cidade TEXT,'
+          'logradouro TEXT,'
+          'numero TEXT,'
+          'bairro TEXT'
+          ')');
     });
   }
 }
-
- // await db.execute('CREATE TABLE Usuario ('
-      //     'id TEXT PRIMARY KEY,'
-      //     'nome TEXT,'
-      //     'cpf TEXT,'
-      //     'email TEXT,'
-      //     'celular TEXT,'
-      //     'cep TEXT,'
-      //     'estado TEXT,'
-      //     'cidade TEXT,'
-      //     'logradouro TEXT,'
-      //     'numero TEXT,'
-      //     'bairro TEXT'
-      //     ')');
-
       // await db.execute('CREATE TABLE Producao ('
       //     'id TEXT PRIMARY KEY,'
       //     'produto TEXT,'
