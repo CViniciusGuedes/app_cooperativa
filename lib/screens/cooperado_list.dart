@@ -50,8 +50,7 @@ class _CooperadoListState extends State<CooperadoList> {
   }
 
   void _refreshCooperados() async {
-    final List<Cooperado> cooperados =
-        await CooperadoRepository(DatabaseHelper.instance).findAll();
+    final List<Cooperado> cooperados = await CooperadoRepository(DatabaseHelper.instance).findAll();
     setState(() {
       _cooperado = cooperados;
       dev.log('');
@@ -92,8 +91,7 @@ class _CooperadoListState extends State<CooperadoList> {
 
         await CooperadoRepository(DatabaseHelper.instance).deleteById(id);
 
-        SnackbarNotificationWidget.error(
-            context, 'Ok', 'Cooperado removido com sucesso!');
+        SnackbarNotificationWidget.error(context, 'Ok', 'Cooperado removido com sucesso!');
 
         _refreshCooperados();
       },
@@ -161,9 +159,7 @@ class _CooperadoListState extends State<CooperadoList> {
                         height: 130,
                         width: 180,
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: AssetImage('assets/images/agricultor.jpg'),
-                              fit: BoxFit.cover),
+                          image: const DecorationImage(image: AssetImage('assets/images/agricultor.jpg'), fit: BoxFit.cover),
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
@@ -420,9 +416,7 @@ class _CooperadoListState extends State<CooperadoList> {
                               IconButton(
                                 onPressed: () async {
                                   dev.log('actions.trash', name: LOGGER_NAME);
-                                  await CooperadoRepository(
-                                          DatabaseHelper.instance)
-                                      .deleteById(_cooperado[i].id!);
+                                  await CooperadoRepository(DatabaseHelper.instance).deleteById(_cooperado[i].id!);
                                   _refreshCooperados();
                                 },
                                 icon: Icon(Icons.delete, color: Colors.red),

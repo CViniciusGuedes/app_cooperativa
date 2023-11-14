@@ -28,7 +28,12 @@ class PropriedadeRepository {
 
   update(Propriedade propriedade) async {
     final database = await _databaseHelper.init();
-    final response = await database.update('Propriedade', propriedade.toMap(), where: 'id = ?', whereArgs: [propriedade.id]);
+    final response = await database.update(
+      'Propriedade',
+      propriedade.toMap(),
+      where: 'id = ?',
+      whereArgs: [propriedade.id],
+    );
     return response;
   }
 

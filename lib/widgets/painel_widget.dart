@@ -1,5 +1,6 @@
 import 'package:app_cooperativa/formularios/cooperado_cadastro.dart';
 import 'package:app_cooperativa/screens/cooperado_list.dart';
+import 'package:app_cooperativa/screens/producao_list.dart';
 import 'package:app_cooperativa/screens/propriedade_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +28,14 @@ class _PainelWidgetState extends State<PainelWidget> {
             SizedBox(
               height: 150,
               child: InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProducaoList(),
+                    ),
+                  );
+                },
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
@@ -45,15 +53,13 @@ class _PainelWidgetState extends State<PainelWidget> {
                           child: SvgPicture.asset(
                             'assets/images/soy.svg',
                             width: 45,
-                            colorFilter:
-                                ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
                           ),
                         ),
                       ),
                       Text(
                         'Produção',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
                     ],
@@ -89,15 +95,13 @@ class _PainelWidgetState extends State<PainelWidget> {
                           child: SvgPicture.asset(
                             'assets/images/farm.svg',
                             width: 40,
-                            colorFilter:
-                                ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
                           ),
                         ),
                       ),
                       Text(
                         'Gerenciar Propriedades',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
                     ],
@@ -133,15 +137,13 @@ class _PainelWidgetState extends State<PainelWidget> {
                           child: SvgPicture.asset(
                             'assets/images/farmer.svg',
                             width: 40,
-                            colorFilter:
-                                ColorFilter.mode(Colors.green, BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(Colors.green, BlendMode.srcIn),
                           ),
                         ),
                       ),
                       Text(
                         'Cooperados',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
                     ],
@@ -176,8 +178,7 @@ class _PainelWidgetState extends State<PainelWidget> {
                       ),
                       Text(
                         'Meteorologia',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
                     ],
@@ -213,8 +214,7 @@ class _PainelWidgetState extends State<PainelWidget> {
                       ),
                       Text(
                         'Cotações',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
                     ],
@@ -249,8 +249,7 @@ class _PainelWidgetState extends State<PainelWidget> {
                       ),
                       Text(
                         'Relatórios',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                         textAlign: TextAlign.center,
                       )
                     ],

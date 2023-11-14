@@ -32,43 +32,41 @@ class _PropriedadeListState extends State<PropriedadeList> {
 
   void _loadPropriedades() async {
     final List<Propriedade> cachedPropriedades = [
-      // Propriedade(
-      //   nome: 'Fazenda Guedes',
-      //   endereco: 'Estrada Vicinal 400',
-      //   bairro: 'Bairro Dourados',
-      //   cidade: 'Tarumã',
-      //   uf: 'SP',
-      //   area: '4.000²',
-      //   tipoSolo: 'Arenoso',
-      // ),
-      // Propriedade(
-      //   nome: 'Fazenda Nova America',
-      //   endereco: 'Estrada Vicinal 300',
-      //   bairro: 'Aguá da Aldeia',
-      //   cidade: 'Tarumã',
-      //   uf: 'SP',
-      //   area: '5.000²',
-      //   tipoSolo: 'Terra Roxa',
-      // ),
-      // Propriedade(
-      //   nome: 'Sitio Moreira',
-      //   endereco: 'Estrada Maracaí',
-      //   bairro: 'Anhumas',
-      //   cidade: 'Maracaí',
-      //   uf: 'SP',
-      //   area: '8.000²',
-      //   tipoSolo: 'Solo Arenoso',
-      // )
+      Propriedade(
+        nome: 'Fazenda Guedes',
+        endereco: 'Estrada Vicinal 400',
+        bairro: 'Bairro Dourados',
+        cidade: 'Tarumã',
+        uf: 'SP',
+        area: '4.000²',
+        tipoSolo: 'Arenoso',
+      ),
+      Propriedade(
+        nome: 'Fazenda Nova America',
+        endereco: 'Estrada Vicinal 300',
+        bairro: 'Aguá da Aldeia',
+        cidade: 'Tarumã',
+        uf: 'SP',
+        area: '5.000²',
+        tipoSolo: 'Terra Roxa',
+      ),
+      Propriedade(
+        nome: 'Sitio Moreira',
+        endereco: 'Estrada Maracaí',
+        bairro: 'Anhumas',
+        cidade: 'Maracaí',
+        uf: 'SP',
+        area: '8.000²',
+        tipoSolo: 'Solo Arenoso',
+      )
     ];
 
-    await PropriedadeRepository(DatabaseHelper.instance)
-        .addAll(cachedPropriedades);
+    await PropriedadeRepository(DatabaseHelper.instance).addAll(cachedPropriedades);
     _refreshPropriedades();
   }
 
   void _refreshPropriedades() async {
-    final List<Propriedade> propriedades =
-        await PropriedadeRepository(DatabaseHelper.instance).findAll();
+    final List<Propriedade> propriedades = await PropriedadeRepository(DatabaseHelper.instance).findAll();
 
     setState(() {
       _propriedade = propriedades;
@@ -98,8 +96,7 @@ class _PropriedadeListState extends State<PropriedadeList> {
 
         await PropriedadeRepository(DatabaseHelper.instance).deleteById(id);
 
-        SnackbarNotificationWidget.error(
-            context, 'Ok', 'Propriedade removida com sucesso!');
+        SnackbarNotificationWidget.error(context, 'Ok', 'Propriedade removida com sucesso!');
 
         _refreshPropriedades();
       },
@@ -168,9 +165,7 @@ class _PropriedadeListState extends State<PropriedadeList> {
                         height: 130,
                         width: 180,
                         decoration: BoxDecoration(
-                          image: const DecorationImage(
-                              image: AssetImage('assets/images/fazenda.jpg'),
-                              fit: BoxFit.cover),
+                          image: const DecorationImage(image: AssetImage('assets/images/fazenda.jpg'), fit: BoxFit.cover),
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
@@ -353,13 +348,10 @@ class _PropriedadeListState extends State<PropriedadeList> {
                           child: Row(
                             children: [
                               IconButton(
-                                icon:
-                                    const Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () async {
                                   dev.log('actions.trash', name: LOGGER_NAME);
-                                  await PropriedadeRepository(
-                                          DatabaseHelper.instance)
-                                      .deleteById(_propriedade[i].id!);
+                                  await PropriedadeRepository(DatabaseHelper.instance).deleteById(_propriedade[i].id!);
                                   _refreshPropriedades();
                                 },
                               ),
