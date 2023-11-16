@@ -1,9 +1,11 @@
 import 'package:uuid/uuid.dart';
 import 'package:app_cooperativa/database/uuid_utils.dart';
 
+import '../core/models/abstract_entity.dart';
+
 const uuid = Uuid();
 
-class Propriedade {
+class Propriedade implements AbstractEntity<Propriedade> {
   final String? id;
   final String nome;
   final String endereco;
@@ -11,7 +13,7 @@ class Propriedade {
   final String cidade;
   final String uf;
   final String area;
-  final String tipoSolo;
+  // final String tipoSolo;
 
   Propriedade({
     String? id,
@@ -21,7 +23,7 @@ class Propriedade {
     required this.cidade,
     required this.uf,
     required this.area,
-    required this.tipoSolo,
+    // required this.tipoSolo,
   }) : id = id ?? UuidUtils.simplify(uuid.v4());
 
   factory Propriedade.fromMap(Map<String, dynamic> record) => Propriedade(
@@ -32,7 +34,7 @@ class Propriedade {
         cidade: record['cidade'],
         uf: record['uf'],
         area: record['area'],
-        tipoSolo: record['tipoSolo'],
+        // tipoSolo: record['tipoSolo'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -43,11 +45,11 @@ class Propriedade {
         'cidade': cidade,
         'uf': uf,
         'area': area,
-        'tipoSolo': tipoSolo,
+        // 'tipoSolo': tipoSolo,
       };
 
   @override
   String toString() {
-    return '$id - $nome - $endereco - $bairro - $cidade - $uf - $area - $tipoSolo';
+    return '$id - $nome - $endereco - $bairro - $cidade - $uf - $area';
   }
 }

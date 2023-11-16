@@ -26,8 +26,8 @@ class DatabaseHelper {
           'bairro TEXT,'
           'cidade TEXT,'
           'uf TEXT,'
-          'area TEXT,'
-          'tipoSolo TEXT'
+          'area TEXT'
+          // 'tipoSolo TEXT' //tirar
           ')');
 
       await db.execute('CREATE TABLE Cooperado ('

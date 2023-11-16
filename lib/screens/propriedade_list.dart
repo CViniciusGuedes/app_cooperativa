@@ -32,33 +32,33 @@ class _PropriedadeListState extends State<PropriedadeList> {
 
   void _loadPropriedades() async {
     final List<Propriedade> cachedPropriedades = [
-      Propriedade(
-        nome: 'Fazenda Guedes',
-        endereco: 'Estrada Vicinal 400',
-        bairro: 'Bairro Dourados',
-        cidade: 'Tarumã',
-        uf: 'SP',
-        area: '4.000²',
-        tipoSolo: 'Arenoso',
-      ),
-      Propriedade(
-        nome: 'Fazenda Nova America',
-        endereco: 'Estrada Vicinal 300',
-        bairro: 'Aguá da Aldeia',
-        cidade: 'Tarumã',
-        uf: 'SP',
-        area: '5.000²',
-        tipoSolo: 'Terra Roxa',
-      ),
-      Propriedade(
-        nome: 'Sitio Moreira',
-        endereco: 'Estrada Maracaí',
-        bairro: 'Anhumas',
-        cidade: 'Maracaí',
-        uf: 'SP',
-        area: '8.000²',
-        tipoSolo: 'Solo Arenoso',
-      )
+      // Propriedade(
+      //   nome: 'Fazenda Guedes',
+      //   endereco: 'Estrada Vicinal 400',
+      //   bairro: 'Bairro Dourados',
+      //   cidade: 'Tarumã',
+      //   uf: 'SP',
+      //   area: '4.000²',
+      //   // tipoSolo: 'Arenoso',
+      // ),
+      // Propriedade(
+      //   nome: 'Fazenda Nova America',
+      //   endereco: 'Estrada Vicinal 300',
+      //   bairro: 'Aguá da Aldeia',
+      //   cidade: 'Tarumã',
+      //   uf: 'SP',
+      //   area: '5.000²',
+      //   // tipoSolo: 'Terra Roxa',
+      // ),
+      // Propriedade(
+      //   nome: 'Sitio Moreira',
+      //   endereco: 'Estrada Maracaí',
+      //   bairro: 'Anhumas',
+      //   cidade: 'Maracaí',
+      //   uf: 'SP',
+      //   area: '8.000²',
+      //   // tipoSolo: 'Solo Arenoso',
+      // )
     ];
 
     await PropriedadeRepository(DatabaseHelper.instance).addAll(cachedPropriedades);
@@ -318,30 +318,30 @@ class _PropriedadeListState extends State<PropriedadeList> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                const Text(
-                                  'Tipo Solo: ',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text(
-                                  _propriedade[i].tipoSolo,
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: Align(
+                        //     alignment: Alignment.centerLeft,
+                        //     child: Row(
+                        //       children: [
+                        //         const Text(
+                        //           'Tipo Solo: ',
+                        //           style: TextStyle(
+                        //             fontSize: 13,
+                        //             fontWeight: FontWeight.bold,
+                        //           ),
+                        //         ),
+                        //         Text(
+                        //           _propriedade[i].tipoSolo,
+                        //           style: const TextStyle(
+                        //             fontSize: 13,
+                        //             fontWeight: FontWeight.normal,
+                        //           ),
+                        //         )
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         const Divider(),
                         SizedBox(
                           width: 96,

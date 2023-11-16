@@ -1,9 +1,11 @@
 import 'package:uuid/uuid.dart';
 import 'package:app_cooperativa/database/uuid_utils.dart';
 
+import '../core/models/abstract_entity.dart';
+
 const uuid = Uuid();
 
-class Producao {
+class Producao implements AbstractEntity<Producao> {
   final String? id;
   final String nome;
   final String descricao;
