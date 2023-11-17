@@ -31,6 +31,18 @@ class _PropriedadeListState extends State<PropriedadeList> {
     }
   }
 
+  void _syncPropriedades() async {
+    try {
+      final List<Propriedade> propriedades = await PropriedadeHttpSync.get();
+
+      await PropriedadeRepository(DatabaseHelper.instance).deleteAll();
+      await PropriedadeRepository(DatabaseHelper.instance).addAll(propriedades);
+      _refreshPropriedades();
+    } catch (e) {
+      dev.log('Error $e', name: LOGGER_NAME);
+    }
+  }
+
   void _loadPropriedades() async {
     final List<Propriedade> cachedPropriedades = [
       // Propriedade(
@@ -64,18 +76,6 @@ class _PropriedadeListState extends State<PropriedadeList> {
 
     await PropriedadeRepository(DatabaseHelper.instance).addAll(cachedPropriedades);
     _refreshPropriedades();
-  }
-
-  void _syncPropriedades() async {
-    try {
-      final List<Propriedade> propriedades = await PropriedadeHttpSync.get();
-
-      await PropriedadeRepository(DatabaseHelper.instance).deleteAll();
-      await PropriedadeRepository(DatabaseHelper.instance).addAll(propriedades);
-      _refreshPropriedades();
-    } catch (e) {
-      dev.log('Error $e', name: LOGGER_NAME);
-    }
   }
 
   void _refreshPropriedades() async {
@@ -141,7 +141,8 @@ class _PropriedadeListState extends State<PropriedadeList> {
           IconButton(
             onPressed: () {
               dev.log('actions.refresh', name: '');
-              _loadPropriedades();
+              // _loadPropriedades();
+              _syncPropriedades();
               _refreshPropriedades();
             },
             icon: const Icon(Icons.refresh),

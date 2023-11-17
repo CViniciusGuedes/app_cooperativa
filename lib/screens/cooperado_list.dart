@@ -1,6 +1,7 @@
 import 'package:app_cooperativa/database/cadastro_cooperadoDB.dart';
 import 'package:app_cooperativa/database/cadastro_cooperado_repository.dart';
 import 'package:app_cooperativa/database/database_helper.dart';
+import 'package:app_cooperativa/database/http_sync/cooperado_http_sync.dart';
 import 'package:app_cooperativa/formularios/cooperado_cadastro.dart';
 import 'package:app_cooperativa/widgets/alert_dialog.dart';
 import 'package:app_cooperativa/widgets/snackbar_notification.dart';
@@ -29,6 +30,18 @@ class _CooperadoListState extends State<CooperadoList> {
     }
   }
 
+  void _syncCooperados() async {
+    try {
+      final List<Cooperado> cooperados = await CooperadoHttpSync.get();
+
+      await CooperadoRepository(DatabaseHelper.instance).deleteAll();
+      await CooperadoRepository(DatabaseHelper.instance).addAll(cooperados);
+      _refreshCooperados();
+    } catch (e) {
+      dev.log('Error $e', name: LOGGER_NAME);
+    }
+  }
+
   void _loadCooperados() async {
     final List<Cooperado> cachedCooperados = [
       // Cooperado(
@@ -53,7 +66,7 @@ class _CooperadoListState extends State<CooperadoList> {
     final List<Cooperado> cooperados = await CooperadoRepository(DatabaseHelper.instance).findAll();
     setState(() {
       _cooperado = cooperados;
-      dev.log('');
+      dev.log('$cooperados', name: LOGGER_NAME);
     });
   }
 
@@ -69,31 +82,24 @@ class _CooperadoListState extends State<CooperadoList> {
         .then((_) => _refreshCooperados());
   }
 
-  // void _editById(String id) async {
-  //   Navigator.of(context)
-  //       .push(
-  //         MaterialPageRoute(
-  //           builder: (context) => CadastroCooperado(
-  //             id: id,
-  //           ),
-  //         ),
-  //       )
-  //       .then((_) => _refreshCooperados());
-  // }
-
   void _deleteById(String id) async {
     AlertDialogWidget.show(
       context,
       'Atenção',
       'Confirma Exclusão do Cooperado?',
       onConfirm: () async {
-        dev.log('Remoção de Cooperado Confirmada');
+        try {
+          dev.log('Remoção de Cooperado Confirmada...');
+          final Cooperado? cooperado = await CooperadoRepository(DatabaseHelper.instance).findById(id);
+          final Cooperado cooperadoRemovido = await CooperadoHttpSync.delete(cooperado!.cpf);
+          dev.log('Removido (API)...: $cooperadoRemovido', name: LOGGER_NAME);
+          await CooperadoRepository(DatabaseHelper.instance).deleteById(id);
+          SnackbarNotificationWidget.error(context, 'Ok', 'Cooperado removido com sucesso!');
 
-        await CooperadoRepository(DatabaseHelper.instance).deleteById(id);
-
-        SnackbarNotificationWidget.error(context, 'Ok', 'Cooperado removido com sucesso!');
-
-        _refreshCooperados();
+          _refreshCooperados();
+        } catch (e) {
+          dev.log('error $e', name: LOGGER_NAME);
+        }
       },
       onCancel: () async {
         dev.log('Remoção de Cooperado Cancelada');
@@ -118,7 +124,8 @@ class _CooperadoListState extends State<CooperadoList> {
           IconButton(
             onPressed: () {
               dev.log('actions.refresh', name: '');
-              _loadCooperados();
+              // _loadCooperados();
+              _syncCooperados();
               _refreshCooperados();
             },
             icon: const Icon(Icons.refresh),

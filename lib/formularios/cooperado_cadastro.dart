@@ -3,11 +3,13 @@ import 'dart:developer' as dev;
 import 'package:app_cooperativa/database/cadastro_cooperadoDB.dart';
 import 'package:app_cooperativa/database/cadastro_cooperado_repository.dart';
 import 'package:app_cooperativa/database/database_helper.dart';
-import 'package:app_cooperativa/screens/propriedade_list.dart';
+import 'package:app_cooperativa/database/http_sync/cooperado_http_sync.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import '../widgets/snackbar_notification.dart';
 
 const String LOGGER_NAME = 'mobile.coop';
 
@@ -76,8 +78,7 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
     if (id == null) {
       return;
     }
-    Cooperado? cooperado =
-        await CooperadoRepository(DatabaseHelper.instance).findById(id);
+    Cooperado? cooperado = await CooperadoRepository(DatabaseHelper.instance).findById(id);
 
     if (cooperado != null) {
       idController.text = cooperado.id!;
@@ -194,8 +195,7 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                           ),
                         ],
                         validator: (text) {
-                          final exp = RegExp(
-                              r"(\d{3})+\.?(\d{3})+\.?(\d{3})+-?([\dxX]{1,2})+");
+                          final exp = RegExp(r"(\d{3})+\.?(\d{3})+\.?(\d{3})+-?([\dxX]{1,2})+");
                           if (!exp.hasMatch(text ?? '')) {
                             return 'CPF Inválido';
                           }
@@ -215,8 +215,7 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                       child: TextFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (text) {
-                          final exp = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                          final exp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
                           if (!exp.hasMatch(text ?? '')) {
                             return 'E-mail Inválido';
                           }
@@ -243,8 +242,7 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                           ),
                         ],
                         validator: (text) {
-                          final exp = RegExp(
-                              r"^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$");
+                          final exp = RegExp(r"^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$");
                           if (!exp.hasMatch(text ?? '')) {
                             return 'Telefone Inválido';
                           }
@@ -381,30 +379,36 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                       ),
                     ),
                     ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStatePropertyAll(Colors.green),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      ),
                       onPressed: () async {
+                        dev.log('actions.save', name: LOGGER_NAME);
+
                         final Cooperado cooperado = _getFormData();
+
+                        if (widget.update) {
+                          final Cooperado CooperadoAtualizado = await CooperadoHttpSync.put(cooperado: cooperado);
+                          dev.log('Atualizando (API)...: $CooperadoAtualizado', name: LOGGER_NAME);
+                        } else {
+                          final Cooperado cooperadoInserido = await CooperadoHttpSync.post(cooperado: cooperado);
+                          dev.log('Inserido (API)...: $cooperadoInserido', name: LOGGER_NAME);
+                        }
+
                         await _saveCooperado(cooperado);
+
                         dev.log('${widget.update}');
 
                         if (widget.update) {
-                          //snackbar
+                          SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado atualizada com sucesso!');
                         } else {
-                          //snackbar
+                          SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado inserida com sucesso!');
                         }
 
                         dev.log('$cooperado', name: LOGGER_NAME);
                         Navigator.of(context).pop();
                       },
-                      child: const Text(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Text(
                         'Salvar',
                         style: TextStyle(color: Colors.white),
                       ),
