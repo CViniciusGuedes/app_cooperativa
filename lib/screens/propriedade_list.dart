@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:app_cooperativa/database/database_helper.dart';
+import 'package:app_cooperativa/database/http_sync/propriedade_http_sync.dart';
 import 'package:app_cooperativa/database/propriedade_repository.dart';
 import 'package:app_cooperativa/formularios/nova_propriedade.dart';
 import 'package:app_cooperativa/widgets/alert_dialog.dart';
@@ -65,12 +66,24 @@ class _PropriedadeListState extends State<PropriedadeList> {
     _refreshPropriedades();
   }
 
+  void _syncPropriedades() async {
+    try {
+      final List<Propriedade> propriedades = await PropriedadeHttpSync.get();
+
+      await PropriedadeRepository(DatabaseHelper.instance).deleteAll();
+      await PropriedadeRepository(DatabaseHelper.instance).addAll(propriedades);
+      _refreshPropriedades();
+    } catch (e) {
+      dev.log('Error $e', name: LOGGER_NAME);
+    }
+  }
+
   void _refreshPropriedades() async {
     final List<Propriedade> propriedades = await PropriedadeRepository(DatabaseHelper.instance).findAll();
 
     setState(() {
       _propriedade = propriedades;
-      dev.log('');
+      dev.log('$propriedades', name: LOGGER_NAME);
     });
   }
 
@@ -92,13 +105,17 @@ class _PropriedadeListState extends State<PropriedadeList> {
       'Atenção',
       'Confirma Exclusão da Propriedade?',
       onConfirm: () async {
-        dev.log('Remoção de Propriedade Confirmada');
-
-        await PropriedadeRepository(DatabaseHelper.instance).deleteById(id);
-
-        SnackbarNotificationWidget.error(context, 'Ok', 'Propriedade removida com sucesso!');
-
-        _refreshPropriedades();
+        try {
+          dev.log('Remoção de Propriedade Confirmada...');
+          final Propriedade? propriedade = await PropriedadeRepository(DatabaseHelper.instance).findById(id);
+          final Propriedade propriedadeRemovida = await PropriedadeHttpSync.delete(propriedade!.nome);
+          dev.log('Removido (API)...: $propriedadeRemovida', name: LOGGER_NAME);
+          await PropriedadeRepository(DatabaseHelper.instance).deleteById(id);
+          SnackbarNotificationWidget.error(context, 'Ok', 'Propriedade removida com sucesso!');
+          _refreshPropriedades();
+        } catch (e) {
+          dev.log('error $e', name: LOGGER_NAME);
+        }
       },
       onCancel: () async {
         dev.log('Remoção de Propriedade Cancelada');

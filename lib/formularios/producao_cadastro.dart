@@ -1,4 +1,5 @@
 import 'package:app_cooperativa/database/database_helper.dart';
+import 'package:app_cooperativa/database/http_sync/producao_http_sync.dart';
 import 'package:app_cooperativa/database/producaoDB.dart';
 import 'package:app_cooperativa/database/producao_repository.dart';
 import 'package:flutter/material.dart';
@@ -201,7 +202,17 @@ class _ProducaoCadastroState extends State<ProducaoCadastro> {
                   ),
                   ElevatedButton(
                     onPressed: () async {
+                      dev.log('actions.save', name: LOGGER_NAME);
+
                       final Producao producao = _getFormData();
+
+                      if (widget.update) {
+                        final Producao producaoAtualizada = await ProducaoHttpSync.put(producao: producao);
+                        dev.log('Atualizando (API)...: $producaoAtualizada', name: LOGGER_NAME);
+                      } else {
+                        final Producao producaoInserida = await ProducaoHttpSync.post(producao: producao);
+                        dev.log('Inserido (API)...:$producaoInserida', name: LOGGER_NAME);
+                      }
 
                       await _saveProducao(producao);
 

@@ -1,4 +1,5 @@
 import 'package:app_cooperativa/database/database_helper.dart';
+import 'package:app_cooperativa/database/http_sync/propriedade_http_sync.dart';
 import 'package:app_cooperativa/database/propriedadeDB.dart';
 import 'package:app_cooperativa/database/propriedade_repository.dart';
 import 'package:app_cooperativa/widgets/snackbar_notification.dart';
@@ -28,7 +29,6 @@ class _NovaPropriedadeState extends State<NovaPropriedade> {
   TextEditingController cidadeController = TextEditingController();
   TextEditingController ufController = TextEditingController();
   TextEditingController areaController = TextEditingController();
-  // TextEditingController tipoSoloController = TextEditingController();
 
   Propriedade _getFormData() {
     final String id = idController.text;
@@ -38,7 +38,6 @@ class _NovaPropriedadeState extends State<NovaPropriedade> {
     final String cidade = cidadeController.text;
     final String uf = ufController.text;
     final String area = areaController.text;
-    // final String tipoSolo = tipoSoloController.text;
 
     return Propriedade(id: id == '' ? null : id, nome: nome, endereco: endereco, bairro: bairro, cidade: cidade, uf: uf, area: area);
   }
@@ -62,7 +61,6 @@ class _NovaPropriedadeState extends State<NovaPropriedade> {
       cidadeController.text = propriedade.cidade;
       ufController.text = propriedade.uf;
       areaController.text = propriedade.area;
-      // tipoSoloController.text = propriedade.tipoSolo;
     }
   }
 
@@ -225,30 +223,19 @@ class _NovaPropriedadeState extends State<NovaPropriedade> {
                         ),
                       ),
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.all(8.0),
-                    //   child: TextFormField(
-                    //     autovalidateMode: AutovalidateMode.onUserInteraction,
-                    //     // validator: (text) {
-                    //     //   final exp = RegExp(r'^[a-zA-Z\s]+$');
-                    //     //   if (!exp.hasMatch(text ?? '')) {
-                    //     //     return 'Modelo Inválido';
-                    //     //   }
-                    //     //   return null;
-                    //     // },
-                    //     keyboardType: TextInputType.text,
-                    //     controller: tipoSoloController,
-                    //     textCapitalization: TextCapitalization.words,
-                    //     textAlign: TextAlign.start,
-                    //     decoration: const InputDecoration(
-                    //       border: OutlineInputBorder(),
-                    //       labelText: 'Tipo Solo',
-                    //     ),
-                    //   ),
-                    // ),
                     ElevatedButton(
                       onPressed: () async {
+                        dev.log('actions.save', name: LOGGER_NAME);
+
                         final Propriedade propriedade = _getFormData();
+
+                        if (widget.update) {
+                          final Propriedade propriedadeAtualizada = await PropriedadeHttpSync.put(propriedade: propriedade);
+                          dev.log('Atualizando (API)...: $propriedadeAtualizada', name: LOGGER_NAME);
+                        } else {
+                          final Propriedade propriedadeInserida = await PropriedadeHttpSync.post(propriedade: propriedade);
+                          dev.log('Inserido (API)...: $propriedadeInserida', name: LOGGER_NAME);
+                        }
 
                         await _savePropriedade(propriedade);
 

@@ -1,4 +1,5 @@
 import 'package:app_cooperativa/database/database_helper.dart';
+import 'package:app_cooperativa/database/http_sync/producao_http_sync.dart';
 import 'package:app_cooperativa/database/producaoDB.dart';
 import 'package:app_cooperativa/database/producao_repository.dart';
 import 'package:app_cooperativa/formularios/producao_cadastro.dart';
@@ -29,6 +30,18 @@ class _ProducaoListState extends State<ProducaoList> {
     }
   }
 
+  void _syncProducao() async {
+    try {
+      final List<Producao> producao = await ProducaoHttpSync.get();
+
+      await ProducaoRepository(DatabaseHelper.instance).deleteAll();
+      await ProducaoRepository(DatabaseHelper.instance).addAll(producao);
+      _refreshProducao();
+    } catch (e) {
+      dev.log('error $e', name: LOGGER_NAME);
+    }
+  }
+
   void _loadProducao() async {
     final List<Producao> cachedProducao = [
       // Producao(
@@ -47,7 +60,7 @@ class _ProducaoListState extends State<ProducaoList> {
     final List<Producao> producao = await ProducaoRepository(DatabaseHelper.instance).findAll();
     setState(() {
       _producao = producao;
-      dev.log('');
+      dev.log('$producao', name: LOGGER_NAME);
     });
   }
 
@@ -71,12 +84,17 @@ class _ProducaoListState extends State<ProducaoList> {
       'Atenção',
       'Confirma Exclusão da Produção?',
       onConfirm: () async {
-        dev.log('Remoção de Produção Confirmada');
-
-        await ProducaoRepository(DatabaseHelper.instance).deleteById(id);
-
-        SnackbarNotificationWidget.error(context, 'Ok', 'Produção removida com sucesso!');
-        _refreshProducao();
+        try {
+          dev.log('Remoção de produção confirmada...');
+          final Producao? producao = await ProducaoRepository(DatabaseHelper.instance).findById(id);
+          final Producao producaoRemovida = await ProducaoHttpSync.delete(producao!.nome);
+          dev.log('Removido (API)...:$producaoRemovida', name: LOGGER_NAME);
+          await ProducaoRepository(DatabaseHelper.instance).deleteById(id);
+          SnackbarNotificationWidget.error(context, 'Ok', 'Produção removida com sucesso!');
+          _refreshProducao();
+        } catch (e) {
+          dev.log('error $e', name: LOGGER_NAME);
+        }
       },
       onCancel: () async {
         dev.log('Remoção de Produção Cancelada');
@@ -99,16 +117,17 @@ class _ProducaoListState extends State<ProducaoList> {
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           IconButton(
-            onPressed: () {
-              dev.log('actions.refresh', name: '');
-              _loadProducao();
+            onPressed: () async {
+              dev.log('actions.refresh', name: LOGGER_NAME);
+              // _loadProducao();
+              _syncProducao();
               _refreshProducao();
             },
             icon: const Icon(Icons.refresh),
           ),
           IconButton(
             onPressed: () {
-              dev.log('actions.add', name: '');
+              dev.log('actions.add', name: LOGGER_NAME);
               Navigator.of(context)
                   .push(MaterialPageRoute(
                       builder: (context) => ProducaoCadastro(

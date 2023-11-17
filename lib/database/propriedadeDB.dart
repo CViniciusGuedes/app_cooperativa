@@ -13,7 +13,6 @@ class Propriedade implements AbstractEntity<Propriedade> {
   final String cidade;
   final String uf;
   final String area;
-  // final String tipoSolo;
 
   Propriedade({
     String? id,
@@ -23,7 +22,6 @@ class Propriedade implements AbstractEntity<Propriedade> {
     required this.cidade,
     required this.uf,
     required this.area,
-    // required this.tipoSolo,
   }) : id = id ?? UuidUtils.simplify(uuid.v4());
 
   factory Propriedade.fromMap(Map<String, dynamic> record) => Propriedade(
@@ -34,7 +32,6 @@ class Propriedade implements AbstractEntity<Propriedade> {
         cidade: record['cidade'],
         uf: record['uf'],
         area: record['area'],
-        // tipoSolo: record['tipoSolo'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -45,7 +42,6 @@ class Propriedade implements AbstractEntity<Propriedade> {
         'cidade': cidade,
         'uf': uf,
         'area': area,
-        // 'tipoSolo': tipoSolo,
       };
 
   @override
