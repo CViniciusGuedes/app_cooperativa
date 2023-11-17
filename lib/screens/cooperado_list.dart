@@ -52,7 +52,7 @@ class _CooperadoListState extends State<CooperadoList> {
       //   cep: '19822108',
       //   estado: 'SP',
       //   cidade: 'Taruma',
-      //   logradouro: 'Jatoba',
+      //   rua: 'Jatoba',
       //   numero: '109',
       //   bairro: 'Arvores',
       // ),
@@ -350,7 +350,7 @@ class _CooperadoListState extends State<CooperadoList> {
                             child: Row(
                               children: [
                                 const Text(
-                                  'Logradouro: ',
+                                  'Rua: ',
                                   style: TextStyle(
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold,

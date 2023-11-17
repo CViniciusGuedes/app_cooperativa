@@ -97,6 +97,41 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
 
   String resultado = 'Cep';
 
+  // void buscaCep() async {
+  //   String cep = cepController.text;
+  //   String url = "https://viacep.com.br/ws/$cep/json/";
+
+  //   Uri uri = Uri.parse(url);
+
+  //   http.Response response;
+  //   response = await http.get(uri);
+
+  //   print("Resposta: " + response.body);
+  //   print("Status Code: " + response.statusCode.toString());
+
+  //   Map<String, dynamic>? dados = json.decode(response.body);
+
+  //   if (dados != null) {
+  //     String logradouro = dados["logradouro"] ?? ""; // Usando "logradouro" em vez de "logradouro"
+  //     String bairro = dados["bairro"] ?? "";
+  //     String localidade = dados["localidade"] ?? "";
+  //     String uf = dados["uf"] ?? "";
+
+  //     String endereco = "O endereço é: $localidade";
+
+  //     setState(() {
+  //       resultado = endereco;
+  //       bairroController.text = bairro;
+  //       estadoController.text = uf;
+  //       cidadeController.text = localidade;
+  //       logradouroController.text = logradouro;
+  //     });
+  //   } else {
+  //     // Tratar o caso em que os dados são nulos
+  //     print("Dados de endereço nulos");
+  //   }
+  // }
+
   void buscaCep() async {
     String cep = cepController.text;
     String url = "https://viacep.com.br/ws/$cep/json/";
@@ -241,13 +276,13 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                             type: MaskAutoCompletionType.lazy,
                           ),
                         ],
-                        validator: (text) {
-                          final exp = RegExp(r"^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$");
-                          if (!exp.hasMatch(text ?? '')) {
-                            return 'Telefone Inválido';
-                          }
-                          return null;
-                        },
+                        // validator: (text) {
+                        //   final exp = RegExp(r"^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$");
+                        //   if (!exp.hasMatch(text ?? '')) {
+                        //     return 'Telefone Inválido';
+                        //   }
+                        //   return null;
+                        // },
                         keyboardType: TextInputType.phone,
                         controller: phoneController,
                         textAlign: TextAlign.start,
@@ -274,13 +309,13 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                             type: MaskAutoCompletionType.lazy,
                           ),
                         ],
-                        validator: (text) {
-                          final exp = RegExp(r'^\d{5}-\d{3}$');
-                          if (!exp.hasMatch(text ?? '')) {
-                            return 'CEP Inválido';
-                          }
-                          return null;
-                        },
+                        // validator: (text) {
+                        //   final exp = RegExp(r'^\d{5}-\d{3}$');
+                        //   if (!exp.hasMatch(text ?? '')) {
+                        //     return 'CEP Inválido';
+                        //   }
+                        //   return null;
+                        // },
                         onChanged: (text) {
                           if (text.length == 9) {
                             buscaCep();
@@ -378,6 +413,41 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                         ),
                       ),
                     ),
+                    // ElevatedButton(
+                    //   onPressed: () async {
+                    //     dev.log('actions.save', name: LOGGER_NAME);
+
+                    //     final Cooperado cooperado = _getFormData();
+
+                    //     if (widget.update) {
+                    //       final Cooperado CooperadoAtualizado = await CooperadoHttpSync.put(cooperado: cooperado);
+                    //       dev.log('Atualizando (API)...: $CooperadoAtualizado', name: LOGGER_NAME);
+                    //     } else {
+                    //       final Cooperado cooperadoInserido = await CooperadoHttpSync.post(cooperado: cooperado);
+                    //       dev.log('Inserido (API)...: $cooperadoInserido', name: LOGGER_NAME);
+                    //     }
+
+                    //     await _saveCooperado(cooperado);
+
+                    //     dev.log('${widget.update}');
+
+                    //     if (widget.update) {
+                    //       SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado atualizada com sucesso!');
+                    //     } else {
+                    //       SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado inserida com sucesso!');
+                    //     }
+
+                    //     dev.log('$cooperado', name: LOGGER_NAME);
+                    //     Navigator.of(context).pop();
+                    //   },
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: Colors.green,
+                    //   ),
+                    //   child: Text(
+                    //     'Salvar',
+                    //     style: TextStyle(color: Colors.white),
+                    //   ),
+                    // ),
                     ElevatedButton(
                       onPressed: () async {
                         dev.log('actions.save', name: LOGGER_NAME);
@@ -385,21 +455,20 @@ class _CadastroCooperadoState extends State<CadastroCooperado> {
                         final Cooperado cooperado = _getFormData();
 
                         if (widget.update) {
-                          final Cooperado CooperadoAtualizado = await CooperadoHttpSync.put(cooperado: cooperado);
-                          dev.log('Atualizando (API)...: $CooperadoAtualizado', name: LOGGER_NAME);
+                          final Cooperado cooperadoAtualizado = await CooperadoHttpSync.put(cooperado: cooperado);
+                          dev.log('Atualizando (API)...: $cooperadoAtualizado', name: LOGGER_NAME);
                         } else {
                           final Cooperado cooperadoInserido = await CooperadoHttpSync.post(cooperado: cooperado);
                           dev.log('Inserido (API)...: $cooperadoInserido', name: LOGGER_NAME);
                         }
 
                         await _saveCooperado(cooperado);
-
                         dev.log('${widget.update}');
 
                         if (widget.update) {
-                          SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado atualizada com sucesso!');
+                          SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado Atualizado com sucesso!');
                         } else {
-                          SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado inserida com sucesso!');
+                          SnackbarNotificationWidget.info(context, 'Ok', 'Cooperado inserido com sucesso!');
                         }
 
                         dev.log('$cooperado', name: LOGGER_NAME);
